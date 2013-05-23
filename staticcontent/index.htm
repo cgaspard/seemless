@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>
+			Test Me
+		</title>
+		 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="/api/framework"></script>
+		<script>
+			function AddIt() {
+				ExportObject.addNumbers(1, 5, function(returnObj) {
+						alert("success: " + returnObj);
+					},
+					function(jqXHR, textStatus, err) {
+						alert("error: " + err);
+					}
+				);
+			}
+			function SubtractIt() {
+				ExportObject.SubObject.subtrackNumbers(2, 1, 
+					function(returnObj) {
+						alert("success: " + returnObj);
+					},
+					function(jqXHR, textStatus, err) {
+						alert("error: " + err);
+					}
+				);
+			}
+		</script>
+	</head>
+	<body>
+		Static Content Here<br><br>
+		<input type="button" onclick="AddIt();" value="add 1 + 2"> 
+		<input type="button" onclick="SubtractIt();" value="sub 2 -1"> 
+	<img/>
+	</body>
+</html>
