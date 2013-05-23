@@ -4,6 +4,17 @@ var Seemless = {
 	apisCallbacks : [],
 	parentObjects : [],
 
+	addObjectRoute : function(route, routeObj, restServer) {
+		console.log("addObjectRoute " + route);
+		restServer.get(route, function (req, res, next) {
+			res.setHeader('Content-Type', 'text/javascript');
+			res.writeHead(200);
+			res.write(Seemless.generateAPIForObject(routeObj));
+			res.end();
+			next();
+		});
+	},
+
 	generateAPIForObject : function(objectToGenerate) {
 		console.log("calling generateAPIForObject");
 		var returnString = "var " + objectToGenerate.APIObjectName + " = " + Seemless.ObjectToClientSideAPI(objectToGenerate);
@@ -23,7 +34,11 @@ var Seemless = {
 				case "string" : {
 					console.log("Checking " + propName);
 					if(propName == "APIObjectName") {
-						objectRouteName = "/" + objectToBuild[propName];
+						if(parentRouteName === undefined) {
+							objectRouteName = "/" + objectToBuild[propName];
+						} else {
+							objectRouteName = "." + objectToBuild[propName];
+						}
 					}
 					break;       
 				}
@@ -31,7 +46,7 @@ var Seemless = {
 		}
 		
 		if(parentRouteName !== undefined) {
-			objectRouteName = parentRouteName  + objectRouteName
+			objectRouteName = parentRouteName + objectRouteName
 		}
 		
 		console.log("Should be route " + objectRouteName);
@@ -86,7 +101,11 @@ var Seemless = {
 			switch(typeof(objectToRoute[propName])){
 				case "string" : {
 					if(propName == "APIObjectName") {
-						objectToRouteName = "/" + objectToRoute[propName];
+						if(parentRouteName === undefined) {
+							objectToRouteName = "/" + objectToRoute[propName];
+						} else {
+							objectToRouteName = "." + objectToRoute[propName];
+						}
 					}
 					break;       
 				}
@@ -115,9 +134,7 @@ var Seemless = {
 									params.push(req.params[paramName]);
 								}
 
-								var callResult = Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params);
-								//var callResult = Seemless.apisCallbacks[rt].call(Seemless.parentObjects[rt], params);
-								//var callResult = Seemless.apisCallbacks[rt](4, 2);
+								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
 								console.log(callResult);
 								res.send(callResult.toString());
 							}
@@ -131,13 +148,16 @@ var Seemless = {
 						console.log(req.url);
 						for(var rt = 0; rt < Seemless.routes.length; rt++) {
 							if(Seemless.routes[rt] == req.url) {
-								//console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
-								var params = req.params;
-								//var callResult = Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], [4, 2]);
-								//var callResult = Seemless.apisCallbacks[rt].call(Seemless.parentObjects[rt], 4, 2);
-								var callResult = Seemless.apisCallbacks[rt](4, 2);
-								console.log(Seemless.apisCallbacks[rt]);
-								res.send(callResult).toString();
+								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
+								var params = new Array();
+								for(paramName in req.params) {
+									params.push(req.params[paramName]);
+								}
+
+								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
+								console.log(callResult);
+								res.send(callResult.toString());
+
 							}
 						}
 					});
@@ -189,6 +209,7 @@ function generatePostString(params) {
 }
 
 function getNodeParams(paramsArray) {
+	if(paramsArray === null) return "";
 	var paramString = "";
 	for(i = 0; i < paramsArray.length; i++) {
 		paramString += "/:" + paramsArray[i];
