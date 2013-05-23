@@ -1,3 +1,22 @@
+var Mapper = require('mapper');
+
+var conn = { user: 'root', password: 'addison123', database: 'mygait' };
+
+// set verbose flag to trace SQL
+// set strict to be warned of invalid columns in JSON objects
+Mapper.connect(conn, {verbose: true, strict: false});
+
+var MyGait = {
+
+	Init : function  () {
+		this.User = Mapper.map("tblusers", "id");
+	}
+	
+};
+
+MyGait.Init();
+
+
 var Data = {
 
 	APIObjectName : "Data",
@@ -5,38 +24,36 @@ var Data = {
 	Name: "arcticfox",
 	
 	Entities : {
+		APIObjectName : "Entities",
 
-		getList : function() {
-			console.log("Calling Data.Entities.getList()");
-			return  [{"id" : 1},{"id": 2}];
-		},
-
-		getList2 : function() {
-			console.log("Calling Data.Entities.getList()");
-			return  [{"id" : 1},{"id": 2}];
-		},
-
-		APIObjectName : "Entities",	
-		
 		User : {
-			APIObjectName: "User",
+			APIObjectName : "User",
+			Get : function(id) {
+				var myCallback = arguments[arguments.length - 1];
 
-			table : "tblusers",
+				MyGait.User.where({"id":id}).one(function(err, user) {
+					myCallback(err, user);
+				});
+			},
+			Where : function(whereCondition) {
 
-			getAll : function() {
-				return  {"id" : "1234", "name" : "test"};
+			},
+			Add : function() {
+
+			},
+			Update : function() {
+
+			},
+			Delete : function() {
+
 			}
-
 		},
-	
+
 		Order : {
 			APIObjectName: "Order",
 			table : "tblorders"
 		}
 	}
-
-
-
 }
 
 module.exports = Data;

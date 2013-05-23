@@ -28,7 +28,7 @@
 			}
 
 			function GetUsers() {
-				Data.Entities.User.getAll(
+				Data.Entities.User.Get(4916, 
 					function(returnObj) {
 						alert(returnObj);
 					},
@@ -37,8 +37,8 @@
 					});
 			}
 
-			function GetList2() {
-				Data.Entities.getList2(
+			function GetList() {
+				Data.Entities.getList(
 					function(returnObj) {
 						alert(returnObj);
 					},
@@ -53,6 +53,5 @@
 		<input type="button" onclick="AddIt();" value="add 1 + 2"> 
 		<input type="button" onclick="SubtractIt();" value="sub 2 -1"> 
 		<input type="button" onclick="GetUsers();" value="GetUser"> 
-		<input type="button" onclick="GetList2();" value="GetList"> 
 	</body>
 </html>

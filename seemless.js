@@ -128,15 +128,29 @@ var Seemless = {
 						console.log(req.url);
 						for(var rt = 0; rt < Seemless.routes.length; rt++) {
 							if(Seemless.routes[rt] == req.url) {
-								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
+								
 								var params = new Array();
 								for(paramName in req.params) {
 									params.push(req.params[paramName]);
 								}
 
+								params.push(function(err, returnValue) {
+									console.log("Sending: returnValue=" + returnValue);
+									res.send(JSON.stringify(returnValue));
+								});
+								
+								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
+
 								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
-								console.log(callResult);
-								res.send(callResult.toString());
+
+								console.log("SyncCallResult: " + callResult);
+
+								if(callResult !== undefined) {
+									res.send(callResult.toString());
+								}
+
+								
+								
 							}
 
 						}
@@ -148,11 +162,16 @@ var Seemless = {
 						console.log(req.url);
 						for(var rt = 0; rt < Seemless.routes.length; rt++) {
 							if(Seemless.routes[rt] == req.url) {
-								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
 								var params = new Array();
 								for(paramName in req.params) {
 									params.push(req.params[paramName]);
 								}
+								params.push(function(err, returnValue) {
+									console.log("Sending: returnValue=" + returnValue);
+									res.send(returnValue);
+								});
+
+								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
 
 								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
 								console.log(callResult);
