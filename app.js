@@ -7,11 +7,11 @@ var staticserver = require("./staticcontent/staticserver.js");
 var restServer = restify.createServer();
 restServer.use(restify.bodyParser());
 
-seemless.generateRoutesForClientAPIAccess(framework, restServer);
-seemless.addObjectRoute('/api/framework', framework, restServer);
+seemless.generateRoutesForClientAPIAccess(framework, "ExportObject", restServer);
+seemless.addObjectRoute('/api/framework', framework, "ExportObject", restServer);
 
-seemless.generateRoutesForClientAPIAccess(data, restServer);
-seemless.addObjectRoute('/api/data', data, restServer);
+seemless.generateRoutesForClientAPIAccess(data, "Data", restServer);
+seemless.addObjectRoute('/api/data', data, "Data", restServer);
 
 restServer.get(/^\/.*/, staticserver.getStaticContent);
 

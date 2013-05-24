@@ -9,6 +9,7 @@ Mapper.connect(conn, {verbose: true, strict: false});
 var MyGait = {
 
 	Init : function  () {
+		console.log("Adding mapt for tblusers");
 		this.User = Mapper.map("tblusers", "id");
 	}
 	
@@ -19,15 +20,13 @@ MyGait.Init();
 
 var Data = {
 
-	APIObjectName : "Data",
+	//APIObjectName : "Data",
 
 	Name: "arcticfox",
 	
 	Entities : {
-		APIObjectName : "Entities",
 
 		User : {
-			APIObjectName : "User",
 			Get : function(id) {
 				var myCallback = arguments[arguments.length - 1];
 
@@ -50,7 +49,6 @@ var Data = {
 		},
 
 		Order : {
-			APIObjectName: "Order",
 			table : "tblorders"
 		}
 	}

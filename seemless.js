@@ -4,117 +4,114 @@ var Seemless = {
 	apisCallbacks : [],
 	parentObjects : [],
 
-	addObjectRoute : function(route, routeObj, restServer) {
+	addObjectRoute : function(route, routeObj, rootObjectname, restServer) {
 		console.log("addObjectRoute " + route);
 		restServer.get(route, function (req, res, next) {
 			res.setHeader('Content-Type', 'text/javascript');
 			res.writeHead(200);
-			res.write(Seemless.generateAPIForObject(routeObj));
+			res.write(Seemless.generateAPIForObject(routeObj, rootObjectname));
 			res.end();
 			next();
 		});
 	},
 
-	generateAPIForObject : function(objectToGenerate) {
-		console.log("calling generateAPIForObject");
-		var returnString = "var " + objectToGenerate.APIObjectName + " = " + Seemless.ObjectToClientSideAPI(objectToGenerate);
+	generateAPIForObject : function(objectToGenerate, rootObjectname) {
+		var returnString = "var " + rootObjectname + " = " + Seemless.ObjectToClientSideAPI(objectToGenerate, rootObjectname);
 		return returnString;
 	},
 	
-	generateRoutesForClientAPIAccess : function(objectToGenerate, restServer) {
+	generateRoutesForClientAPIAccess : function(objectToGenerate, rootObjectname, restServer) {
 		console.log("calling generateRoutesForClientAPIAccess");
-		Seemless.BuildRoutesForObjectWithRestify(objectToGenerate, restServer);
+		Seemless.BuildRoutesForObjectWithRestify(objectToGenerate, restServer, rootObjectname);
 	},
 
-	ObjectToClientSideAPI : function(objectToBuild, parentRouteName) {
-		var objectRouteName = "";
-		
-		for (var propName in objectToBuild) {
-			switch(typeof(objectToBuild[propName])){
-				case "string" : {
-					console.log("Checking " + propName);
-					if(propName == "APIObjectName") {
-						if(parentRouteName === undefined) {
-							objectRouteName = "/" + objectToBuild[propName];
-						} else {
-							objectRouteName = "." + objectToBuild[propName];
-						}
-					}
-					break;       
+	dispatchClientAPICall : function(req, res, body) {
+		console.log(req.url);
+		for(var rt = 0; rt < Seemless.routes.length; rt++) {
+			if(Seemless.routes[rt] == req.url) {
+				
+				var params = new Array();
+				for(paramName in req.params) {
+					params.push(req.params[paramName]);
+				}
+
+				params.push(function(err, returnValue) {
+					console.log("AsyncCallResult: " + returnValue);
+					res.send(JSON.stringify(returnValue));
+				});
+				
+				console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
+
+				var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
+
+				console.log("SyncCallResult: " + callResult);
+
+				if(callResult !== undefined) {
+					res.send(callResult.toString());
 				}
 			}
+
 		}
+	},
+
+	ObjectToClientSideAPI : function(objectToBuild, objectRouteName, parentRouteName) {
 		
+
 		if(parentRouteName !== undefined) {
-			objectRouteName = parentRouteName + objectRouteName
+			objectRouteName = parentRouteName + "." + objectRouteName
+		} else {
+			objectRouteName = "/" + objectRouteName;
 		}
-		
-		console.log("Should be route " + objectRouteName);
 
 		var returnObject = addTabs(tabCounter) + "{\r\n";
-		tabCounter += 1;
-		console.log("tabcount = " + tabCounter);
+		tabCounter += 1
 		for (var name in objectToBuild) {
-			tabCounter += 1;
 			switch(typeof(objectToBuild[name])){
 				case "string": {
-					if(propName == "APIObjectName") { break; }
-					returnObject += addTabs(tabCounter) + "\"" + name + "\":\"" + objectToBuild[name] + "\"";
+					returnObject += addTabs(tabCounter) + "\"" + name + "\":\"" + objectToBuild[name] + "\",\r\n";
 					break;
 				}
 				case "function" : {
 					var functionParams = getParamNames(objectToBuild[name]);
-					returnObject += addTabs(tabCounter) + "\"" + name + "\": function(" + (functionParams == null ? "" : functionParams + ", ") + " successCallback, errorCallback) {\r\n";
+					returnObject += addTabs(tabCounter) + "\"" + name + "\": function(" + (functionParams == null ? "" : functionParams.join(", ") + ", ") + "successCallback, errorCallback) {\r\n";
 					tabCounter += 1;
 					returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "\";\r\n";
 					//returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
-					var ajaxFixed = ajaxJqueryString;
+					var ajaxFixed = addTabs(tabCounter) + ajaxJqueryString;
 					ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
 					ajaxFixed = ajaxFixed.replace("$PARAMS$", generatePostString(functionParams));
 					ajaxFixed = ajaxFixed.replace("$SUCCESSCALLBACK$", "successCallback");
 					ajaxFixed = ajaxFixed.replace("$ERRORCALLBACK$", "errorCallback");
 					returnObject += ajaxFixed;
-					returnObject += "}"
 					tabCounter -= 1;
+					returnObject += addTabs(tabCounter) + "},\r\n"
+					
 					break;
 				}
 				case "object" : {
-					returnObject += addTabs(tabCounter) + "\"" + name + "\" : " + Seemless.ObjectToClientSideAPI(objectToBuild[name], objectRouteName);
+					returnObject += addTabs(tabCounter) + "\"" + name + "\" : " + Seemless.ObjectToClientSideAPI(objectToBuild[name], name, objectRouteName) + ",\r\n";
 					break;
 				}
-				tabCounter -= 1;
 			}
-			returnObject += ",\r\n";
+			
 			//alert(returnObject);
 			//alert(typeof(buz[name]));
 		}
+		tabCounter -= 1
 		returnObject += addTabs(tabCounter) + "}";
-
+		//console.log("Sending API To Client " + returnObject);
 		return returnObject;
 	},
 
-	BuildRoutesForObjectWithRestify : function(objectToRoute, restServer, parentRouteName) {
-		//console.log("calling BuildRoutesForObjectWithRestify");
-		//console.log(JSON.stringify(objectToRoute));
-		var objectToRouteName, routeString;
-		for (var propName in objectToRoute) {
-			switch(typeof(objectToRoute[propName])){
-				case "string" : {
-					if(propName == "APIObjectName") {
-						if(parentRouteName === undefined) {
-							objectToRouteName = "/" + objectToRoute[propName];
-						} else {
-							objectToRouteName = "." + objectToRoute[propName];
-						}
-					}
-					break;       
-				}
-			}
-		}
+	BuildRoutesForObjectWithRestify : function(objectToRoute, restServer, objectToRouteName, parentRouteName) {
+		var routeString;
+
 		if(parentRouteName !== undefined) {
-			objectToRouteName = parentRouteName + objectToRouteName
+			objectToRouteName = parentRouteName + "." + objectToRouteName
+		} else {
+			objectToRouteName = "/" + objectToRouteName;
 		}
-		
+
 		for (var propName in objectToRoute) {
 			routeString = "";
 			switch(typeof(objectToRoute[propName])){
@@ -124,69 +121,13 @@ var Seemless = {
 					Seemless.routes.push(routeString);
 					Seemless.apisCallbacks.push(objectToRoute[propName]);
 					Seemless.parentObjects.push(objectToRouteName);
-					restServer.post(routeString, function(req, res, body) {
-						console.log(req.url);
-						for(var rt = 0; rt < Seemless.routes.length; rt++) {
-							if(Seemless.routes[rt] == req.url) {
-								
-								var params = new Array();
-								for(paramName in req.params) {
-									params.push(req.params[paramName]);
-								}
+					restServer.post(routeString, Seemless.dispatchClientAPICall);
+					console.log("Added post route " + routeString + " for " + objectToRouteName + "." + propName + "()");
 
-								params.push(function(err, returnValue) {
-									console.log("Sending: returnValue=" + returnValue);
-									res.send(JSON.stringify(returnValue));
-								});
-								
-								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
-
-								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
-
-								console.log("SyncCallResult: " + callResult);
-
-								if(callResult !== undefined) {
-									res.send(callResult.toString());
-								}
-
-								
-								
-							}
-
-						}
-					});
-					console.log("Adding post route " + routeString + " for " + objectToRoute[propName]);
-
-					var functionParams = getParamNames(objectToRoute[propName]);
-					restServer.get(routeString + getNodeParams(functionParams), function(req, res) {
-						console.log(req.url);
-						for(var rt = 0; rt < Seemless.routes.length; rt++) {
-							if(Seemless.routes[rt] == req.url) {
-								var params = new Array();
-								for(paramName in req.params) {
-									params.push(req.params[paramName]);
-								}
-								params.push(function(err, returnValue) {
-									console.log("Sending: returnValue=" + returnValue);
-									res.send(returnValue);
-								});
-
-								console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
-
-								var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
-								console.log(callResult);
-								res.send(callResult.toString());
-
-							}
-						}
-					});
-					console.log("Adding post route " + routeString + getNodeParams(functionParams) + " for " + objectToRoute[propName]);
-
-					
 					break;
 				}
 				case "object" : {
-					Seemless.BuildRoutesForObjectWithRestify(objectToRoute[propName], restServer, objectToRouteName);
+					Seemless.BuildRoutesForObjectWithRestify(objectToRoute[propName], restServer, propName, objectToRouteName);
 					break;
 				}
 			}
@@ -238,7 +179,7 @@ function getNodeParams(paramsArray) {
 
 function addTabs(counter) {
 	var tabRet = "";
-	for(var t = 0; t < counter.length; t++) {
+	for(var t = 0; t < counter; t++) {
 	 tabRet += "\t";   
 	}
 	return tabRet;
