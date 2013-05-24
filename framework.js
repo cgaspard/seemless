@@ -12,8 +12,8 @@ var ExportObject = {
 	
 		APIObjectName : "SubObject",
 	
-		subtrackNumbers : function(x, y) {
-			console.log("calling SubObject.subtrackNumbers(" + x + ", " + y + ")");
+		subtractNumbers : function(x, y) {
+			console.log("calling SubObject.subtractNumbers(" + x + ", " + y + ")");
 			var number = parseInt(x) - parseInt(y);
 			return number;
 		}
