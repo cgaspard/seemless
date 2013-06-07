@@ -1,5 +1,9 @@
 var ExportObject = {
 
+	_seemless_Init : function() {
+
+		console.log("Init called");
+	},
 	//APIObjectName : "ExportObject",
 	
 	addNumbers : function(x, y) {

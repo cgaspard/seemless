@@ -1,8 +1,14 @@
 var Seemless = {
 
 	routes : [],
-	apisCallbacks : [],
+	childObjects : [],
 	parentObjects : [],
+
+	/// This caling this function will 
+	autoGenerateRouteAndAPIForObject : function(clientAPIRoute, objectToRoute, rootObjectName, restServer) {
+		Seemless.addObjectRoute(clientAPIRoute, objectToRoute, rootObjectName, restServer);
+		Seemless.generateRoutesForClientAPIAccess(objectToRoute, rootObjectName, restServer);
+	},
 
 	addObjectRoute : function(route, routeObj, rootObjectname, restServer) {
 		console.log("addObjectRoute " + route);
@@ -42,13 +48,34 @@ var Seemless = {
 				
 				console.log("Calling function  with (" + JSON.stringify(req.params)  +")");
 
-				var callResult = JSON.stringify(Seemless.apisCallbacks[rt].apply(Seemless.parentObjects[rt], params));
+				var callResult = JSON.stringify(Seemless.childObjects[rt].apply(Seemless.parentObjects[rt], params));
 
 				console.log("SyncCallResult: " + callResult);
 
 				if(callResult !== undefined) {
 					res.send(callResult.toString());
 				}
+			}
+
+		}
+	},
+
+	/// Property was set on the client, so update the node version of it
+	dispatchClientAPIPropertyCall : function(req, res, body) {
+		console.log(req.url);
+		for(var rt = 0; rt < Seemless.routes.length; rt++) {
+			if(Seemless.routes[rt] == req.url) {
+				console.log("Going to set property value for route " + Seemless.routes[rt]);
+
+				if(req.params.hasOwnProperty("postValue")) {
+					console.log("Proeprty value set to " + req.params.postValue);
+					///Set Value
+					Seemless.parentObjects[rt][Seemless.childObjects[rt]] = req.params.postValue;
+				}
+
+				console.log("Property api call result:" + Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
+
+				res.send(Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
 			}
 
 		}
@@ -68,10 +95,36 @@ var Seemless = {
 		for (var name in objectToBuild) {
 			switch(typeof(objectToBuild[name])){
 				case "string": {
-					returnObject += addTabs(tabCounter) + "\"" + name + "\":\"" + objectToBuild[name] + "\",\r\n";
+					//returnObject += addTabs(tabCounter) + "\"" + name + "\":\"" + objectToBuild[name] + "\",\r\n";
+					var functionParams = getParamNames(objectToBuild[name]);
+					returnObject += addTabs(tabCounter) + "get " + name + "() { ";
+					tabCounter += 1;
+					returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "_get\";\r\n";
+					//returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
+					var ajaxFixed = addTabs(tabCounter) + "return " + ajaxJquerySyncString;
+					ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
+					ajaxFixed = ajaxFixed.replace("$PARAMS$", "{}");
+					returnObject += ajaxFixed;
+					tabCounter -= 1;
+					returnObject += addTabs(tabCounter) + "},\r\n"
+
+					returnObject += addTabs(tabCounter) + "set " + name + "(setValue) { ";
+					tabCounter += 1;
+					returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "_set\";\r\n";
+					//returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
+					var ajaxFixed = addTabs(tabCounter) + "return " + ajaxJquerySyncString;
+					ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
+					ajaxFixed = ajaxFixed.replace("$PARAMS$", "{ postValue : setValue }");
+					returnObject += ajaxFixed;
+					tabCounter -= 1;
+					returnObject += addTabs(tabCounter) + "},\r\n"
+					
+					break;
 					break;
 				}
 				case "function" : {
+
+					if(name.match(/_seemless_/)) continue;
 					var functionParams = getParamNames(objectToBuild[name]);
 					returnObject += addTabs(tabCounter) + "\"" + name + "\": function(" + (functionParams == null ? "" : functionParams.join(", ") + ", ") + "successCallback, errorCallback) {\r\n";
 					tabCounter += 1;
@@ -115,11 +168,33 @@ var Seemless = {
 		for (var propName in objectToRoute) {
 			routeString = "";
 			switch(typeof(objectToRoute[propName])){
+				case "string" : {
+					routeString =  objectToRouteName + "/" + propName + "_get";
+					//restServer.post(routeString, objectToRoute[propName]);
+					Seemless.routes.push(routeString);
+					Seemless.childObjects.push(propName);
+					Seemless.parentObjects.push(objectToRoute);
+					restServer.post(routeString, Seemless.dispatchClientAPIPropertyCall);
+					console.log("Added post route " + routeString + " for " + objectToRouteName + "." + propName);
+
+
+					routeString =  objectToRouteName + "/" + propName + "_set";
+					//restServer.post(routeString, objectToRoute[propName]);
+					Seemless.routes.push(routeString);
+					Seemless.childObjects.push(propName);
+					Seemless.parentObjects.push(objectToRoute);
+					restServer.post(routeString, Seemless.dispatchClientAPIPropertyCall);
+					console.log("Added post route " + routeString + " for " + objectToRouteName + "." + propName);
+
+					break;
+
+				}
 				case "function": {
+					if(propName.match(/_seemless_/)) continue;
 					routeString =  objectToRouteName + "/" + propName;
 					//restServer.post(routeString, objectToRoute[propName]);
 					Seemless.routes.push(routeString);
-					Seemless.apisCallbacks.push(objectToRoute[propName]);
+					Seemless.childObjects.push(objectToRoute[propName]);
 					Seemless.parentObjects.push(objectToRouteName);
 					restServer.post(routeString, Seemless.dispatchClientAPICall);
 					console.log("Added post route " + routeString + " for " + objectToRouteName + "." + propName + "()");
@@ -192,6 +267,13 @@ var ajaxJqueryString = "$.ajax({ " +
 		"success: $SUCCESSCALLBACK$," +
 		"error: $ERRORCALLBACK$" +
 	"});\r\n";
+
+var ajaxJquerySyncString = "$.ajax({ " +
+		"type: \"POST\"," +
+		"url: ajaxURL," +
+		"data: $PARAMS$," +
+		"async: false" +
+	"}).responseText;\r\n";
 
 function test(x, y) {
 	console.log("in text function");

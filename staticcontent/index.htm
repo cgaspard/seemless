@@ -7,6 +7,17 @@
 		<script src="/api/framework"></script>
 		<script src="/api/data"></script>
 		<script>
+
+			function GetProperty() {
+				alert(Data.Name);
+
+			}
+
+			function SetProperty() {
+				Data.Name = "Corey";
+				alert(Data.Name);
+			}
+
 			function AddIt() {
 				ExportObject.addNumbers(1, 5, function(returnObj) {
 						alert("success: " + returnObj);
@@ -53,5 +64,7 @@
 		<input type="button" onclick="AddIt();" value="add 1 + 2"> 
 		<input type="button" onclick="SubtractIt();" value="sub 2 -1"> 
 		<input type="button" onclick="GetUsers();" value="GetUser"> 
+		<input type="button" onclick="SetProperty()" value="SetProperty">
+		<input type="button" onclick="GetProperty()" value="GetProperty">
 	</body>
 </html>

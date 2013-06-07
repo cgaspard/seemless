@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"objectt",
+				"objectToGenerate"
+			],
+			[
+				"generat",
+				"generateRoutesForClientAPIAccess"
+			],
+			[
+				"root",
+				"rootObjectName"
+			],
+			[
+				"obje",
+				"objectToRoute"
+			],
+			[
+				"return",
+				"returnObject"
+			],
+			[
+				"object",
+				"objectRouteName"
+			],
+			[
+				"obj",
+				"objectRouteName"
+			],
+			[
 				"my",
 				"myCallback"
 			],
@@ -44,42 +72,9 @@
 	"buffers":
 	[
 		{
-			"file": "data.js",
 			"settings":
 			{
-				"buffer_size": 928,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app.js",
-			"settings":
-			{
-				"buffer_size": 716,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "staticcontent/index.htm",
-			"settings":
-			{
-				"buffer_size": 1249,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "seemless.js",
-			"settings":
-			{
-				"buffer_size": 7785,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "framework.js",
-			"settings":
-			{
-				"buffer_size": 486,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		}
@@ -160,8 +155,18 @@
 	},
 	"file_history":
 	[
-		"/home/cgaspard/Projects/cgaspard/seemless/framework.js",
+		"/tmp/January 3rd board meeting.rtf",
+		"/home/cgaspard/Projects/mygait/general/README.md",
+		"/home/cgaspard/Desktop/Broadvoice Ticket.txt",
+		"/home/cgaspard/Desktop/Player Placement Reminder.eml",
+		"/home/cgaspard/Documents/Kurt Mashoff.txt",
+		"/mnt/Data/VMWare/Windows 7 Dev/Windows 7 Dev.vmx",
+		"/home/cgaspard/Projects/cgaspard/seemless/data.js",
 		"/home/cgaspard/Projects/cgaspard/seemless/app.js",
+		"/home/cgaspard/Projects/cgaspard/seemless/staticcontent/index.htm",
+		"/home/cgaspard/Projects/cgaspard/seemless/seemless.js",
+		"/home/cgaspard/Projects/cgaspard/seemless/README.md",
+		"/home/cgaspard/Projects/cgaspard/seemless/framework.js",
 		"/home/cgaspard/Projects/arcticfox/arcticnode/server.js",
 		"/home/cgaspard/Projects/arcticfox/arcticnode/mongoose.js",
 		"/home/cgaspard/Projects/arcticfox/arcticfox/chrome/content/browser.js",
@@ -259,6 +264,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"				\n",
+			"\"var",
+			"tabcou",
 			"getParamNames",
 			"getNodeParams",
 			"highligh",
@@ -334,136 +342,27 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "data.js",
 					"settings":
 					{
-						"buffer_size": 928,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								770,
-								770
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 45.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app.js",
-					"settings":
-					{
-						"buffer_size": 716,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								33,
-								33
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "staticcontent/index.htm",
-					"settings":
-					{
-						"buffer_size": 1249,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1232,
-								1232
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "seemless.js",
-					"settings":
-					{
-						"buffer_size": 7785,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5042,
-								5042
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1447.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "framework.js",
-					"settings":
-					{
-						"buffer_size": 486,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								84,
-								84
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
