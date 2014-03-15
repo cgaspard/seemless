@@ -14,7 +14,8 @@
 			}
 
 			function SetProperty() {
-				Data.Name = "Corey";
+				var userINput = prompt("What do you want to set the property to?");
+				Data.Name = userINput;
 				alert(Data.Name);
 			}
 
@@ -49,7 +50,7 @@
 			}
 
 			function GetList() {
-				Data.Entities.getList(
+				Data.Entities.User.List(
 					function(returnObj) {
 						alert(returnObj);
 					},

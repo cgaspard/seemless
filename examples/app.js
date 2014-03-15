@@ -1,5 +1,5 @@
 var restify = require('restify');
-var seemless = require("./seemless.js");
+var seemless = require("../src/lib/seemless.js");
 var framework = require("./framework.js");
 var data = require("./data.js");
 var staticserver = require("./staticcontent/staticserver.js");
