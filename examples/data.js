@@ -1,4 +1,5 @@
 var Data = {
+	Name: "Test",
 	Entities : {
 		User : {
 			Get : function(userToGet) {
