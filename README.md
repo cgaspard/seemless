@@ -51,7 +51,7 @@ Explanation:
 
 The following two examples will generate a restify routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
 
-To access the restify services include in your html <script src="/api/framework"></script>.
+To access the restify services include /api/framework script in your html.
 
 After doing this, the following is avilable on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
 
