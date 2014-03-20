@@ -49,10 +49,10 @@ Sample Code framework.js
 
 Explanation:
 
-    The following two examples will generate a restify routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
+The following two examples will generate a restify routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
 
-    To access the restify services include in your html <script src="/api/framework"></script>.
+To access the restify services include in your html <script src="/api/framework"></script>.
 
-    After doing this, the following is avilable on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
+After doing this, the following is avilable on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
 
-    Calling the functions on the client side will invoke the /ExportObject/addNumbers web service which will call ExportObject.addNumbers() form framework.js
+Calling the functions on the client side will invoke the /ExportObject/addNumbers web service which will call ExportObject.addNumbers() form framework.js
