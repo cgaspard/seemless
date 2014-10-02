@@ -14,8 +14,8 @@ Sample Code app.js:
     var restServer = restify.createServer();
     restServer.use(restify.bodyParser());
 
-    seemless.generateRoutesForClientAPIAccess(framework, restServer);
-    seemless.addObjectRoute('/api/framework', framework, restServer);
+    seemless.generateRoutesForClientAPIAccess(framework, "APIName", restServer);
+    seemless.addObjectRoute('/api/framework', framework, "APIName", restServer);
 
     restServer.listen(4455, function() {
           console.log('%s listening at %s', restServer.name, restServer.url);
