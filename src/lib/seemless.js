@@ -3,6 +3,7 @@ var Seemless = {
   routes: [],
   childObjects: [],
   parentObjects: [],
+  serverRootPath: "",
 
   /// This caling this function will 
   autoGenerateRouteAndAPIForObject: function (clientAPIRoute, objectToRoute, rootObjectName, restServer) {
@@ -43,6 +44,8 @@ var Seemless = {
 
         params.push(function (err, returnValue) {
           console.log("AsyncCallResult: " + returnValue);
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header("Access-Control-Allow-Headers", "X-Requested-With");
           res.send(JSON.stringify(returnValue));
         });
 
@@ -53,6 +56,8 @@ var Seemless = {
         console.log("SyncCallResult: " + callResult);
 
         if (callResult !== undefined) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header("Access-Control-Allow-Headers", "X-Requested-With");
           res.send(callResult.toString());
         }
       }
@@ -100,7 +105,7 @@ var Seemless = {
           var functionParams = getParamNames(objectToBuild[name]);
           returnObject += addTabs(tabCounter) + "get " + name + "() { ";
           tabCounter += 1;
-          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "_get\";\r\n";
+          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + Seemless.serverRootPath + objectRouteName + "/" + name + "_get\";\r\n";
           //returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
           var ajaxFixed = addTabs(tabCounter) + "return " + ajaxJquerySyncString;
           ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
@@ -111,7 +116,7 @@ var Seemless = {
 
           returnObject += addTabs(tabCounter) + "set " + name + "(setValue) { ";
           tabCounter += 1;
-          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "_set\";\r\n";
+          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + Seemless.serverRootPath + objectRouteName + "/" + name + "_set\";\r\n";
           //returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
           var ajaxFixed = addTabs(tabCounter) + "return " + ajaxJquerySyncString;
           ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
@@ -130,7 +135,7 @@ var Seemless = {
           var functionParams = getParamNames(objectToBuild[name]);
           returnObject += addTabs(tabCounter) + "\"" + name + "\": function(" + (functionParams == null ? "" : functionParams.join(", ") + ", ") + "successCallback, errorCallback) {\r\n";
           tabCounter += 1;
-          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + objectRouteName + "/" + name + "\";\r\n";
+          returnObject += addTabs(tabCounter) + "var ajaxURL = \"" + Seemless.serverRootPath + objectRouteName + "/" + name + "\";\r\n";
           //returnObject += addTabs(tabCounter) + generateParameterReplace(functionParams);
           var ajaxFixed = addTabs(tabCounter) + ajaxJqueryString;
           ajaxFixed = ajaxFixed.replace("$URL$", "/" + name);
