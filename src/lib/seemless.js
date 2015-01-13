@@ -43,10 +43,15 @@ var Seemless = {
         }
 
         params.push(function (err, returnValue) {
-          console.log("AsyncCallResult: " + returnValue);
           res.header("Access-Control-Allow-Origin", "*");
           res.header("Access-Control-Allow-Headers", "X-Requested-With");
-          res.send(JSON.stringify(returnValue));
+          var jsonString = JSON.stringify(returnValue);
+          if (err) {
+            throw err.message;
+          } else {
+            console.log("AsyncCallResult: " + jsonString);
+            res.send(jsonString);
+          }
         });
 
         console.log("Calling function  with (" + JSON.stringify(req.params) + ")");
@@ -274,7 +279,9 @@ function addTabs(counter) {
 var ajaxJqueryString = "$.ajax({ " +
   "type: \"POST\"," +
   "url: ajaxURL," +
-  "data: $PARAMS$," +
+	"dataType: \"json\"," +
+	"contentType: \"application/json; charset=utf-8\"," +
+  "data: JSON.stringify($PARAMS$, null, 2)," +
   "success: $SUCCESSCALLBACK$," +
   "error: $ERRORCALLBACK$" +
   "});\r\n";
@@ -282,7 +289,9 @@ var ajaxJqueryString = "$.ajax({ " +
 var ajaxJquerySyncString = "$.ajax({ " +
   "type: \"POST\"," +
   "url: ajaxURL," +
-  "data: $PARAMS$," +
+	"dataType: \"json\"," +
+	"contentType: \"application/json; charset=utf-8\"," +
+  "data: JSON.stringify($PARAMS$, null, 2)," +
   "async: false" +
   "}).responseText;\r\n";
 
