@@ -6,14 +6,14 @@ var Seemless = {
   parentObjects: [],
   serverRootPath: "",
 
-  /// This caling this function will 
+  /// This caling this function will
   autoGenerateRouteAndAPIForObject: function (clientAPIRoute, objectToRoute, rootObjectName, restServer) {
     Seemless.addObjectRoute(clientAPIRoute, objectToRoute, rootObjectName, restServer);
     Seemless.generateRoutesForClientAPIAccess(objectToRoute, rootObjectName, restServer);
   },
 
   addObjectRoute: function (route, routeObj, rootObjectname, restServer) {
-    console.log("addObjectRoute " + route);
+    //console.log("addObjectRoute " + route);
     restServer.get(route, function (req, res, next) {
       res.setHeader('Content-Type', 'text/javascript');
       res.writeHead(200);
@@ -37,7 +37,7 @@ var Seemless = {
   },
 
   generateRoutesForClientAPIAccess: function (objectToGenerate, rootObjectname, restServer) {
-    console.log("calling generateRoutesForClientAPIAccess");
+    //console.log("calling generateRoutesForClientAPIAccess");
     Seemless.BuildRoutesForObjectWithRestify(objectToGenerate, restServer, rootObjectname);
   },
 
@@ -63,11 +63,11 @@ var Seemless = {
           }
         });
 
-        console.log("Calling function  with (" + JSON.stringify(req.params) + ")");
+        //console.log("Calling function  with (" + JSON.stringify(req.params) + ")");
 
         var callResult = JSON.stringify(Seemless.childObjects[rt].apply(Seemless.parentObjects[rt], params));
 
-        console.log("SyncCallResult: " + callResult);
+        //console.log("SyncCallResult: " + callResult);
 
         if (callResult !== undefined) {
           res.header("Access-Control-Allow-Origin", "*");
@@ -81,18 +81,18 @@ var Seemless = {
 
   /// Property was set on the client, so update the node version of it
   dispatchClientAPIPropertyCall: function (req, res, body) {
-    console.log(req.url);
+    //console.log(req.url);
     for (var rt = 0; rt < Seemless.routes.length; rt++) {
       if (Seemless.routes[rt] == req.url) {
-        console.log("Going to set property value for route " + Seemless.routes[rt]);
+        //console.log("Going to set property value for route " + Seemless.routes[rt]);
 
         if (req.params.hasOwnProperty("postValue")) {
-          console.log("Proeprty value set to " + req.params.postValue);
+          //console.log("Proeprty value set to " + req.params.postValue);
           ///Set Value
           Seemless.parentObjects[rt][Seemless.childObjects[rt]] = req.params.postValue;
         }
 
-        console.log("Property api call result:" + Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
+        //console.log("Property api call result:" + Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
 
         res.send(Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
       }
@@ -305,6 +305,6 @@ var ajaxJquerySyncString = "reqwest({ " +
   "}).request.responseText;\r\n";
 
 function test(x, y) {
-  console.log("in text function");
+  //console.log("in text function");
   return 12;
 }
