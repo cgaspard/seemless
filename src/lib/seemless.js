@@ -56,7 +56,8 @@ var Seemless = {
           res.header("Access-Control-Allow-Headers", "X-Requested-With");
           var jsonString = JSON.stringify(returnValue);
           if (err) {
-            throw err.message;
+            res.statusCode = 500;
+            res.send(err);
           } else {
             //console.log("AsyncCallResult: " + jsonString);
             res.send(jsonString);
