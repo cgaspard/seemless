@@ -1,7 +1,7 @@
 {
   "name": "seemless",
   "preferGlobal": true,
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "Corey Gaspard <cgaspard@gmail.com>",
   "description": "Works with restify server to create a client side javascript jquery ajax calls.",
   "contributors": [
