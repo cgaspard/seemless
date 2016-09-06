@@ -57,10 +57,12 @@ var Seemless = {
           var jsonString = JSON.stringify(returnValue);
           if (err) {
             res.statusCode = 500;
-            res.send(err);
+            res.write(JSON.stringify(err));
+            res.end();
           } else {
             //console.log("AsyncCallResult: " + jsonString);
-            res.send(jsonString);
+            res.write(jsonString);
+            res.end();
           }
         });
 
@@ -73,7 +75,8 @@ var Seemless = {
         if (callResult !== undefined) {
           res.header("Access-Control-Allow-Origin", "*");
           res.header("Access-Control-Allow-Headers", "X-Requested-With");
-          res.send(callResult.toString());
+          res.write(callResult.toString());
+          res.end();
         }
       }
 
@@ -95,7 +98,8 @@ var Seemless = {
 
         //console.log("Property api call result:" + Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
 
-        res.send(Seemless.parentObjects[rt][Seemless.childObjects[rt]].toString());
+        res.write(Seemless.parentObjects[rt][Seemless.childObjects[rt]].toString());
+        res.end();
       }
 
     }
