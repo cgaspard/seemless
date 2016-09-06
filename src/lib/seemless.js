@@ -95,7 +95,7 @@ var Seemless = {
 
         //console.log("Property api call result:" + Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
 
-        res.send(Seemless.parentObjects[rt][Seemless.childObjects[rt]]);
+        res.send(Seemless.parentObjects[rt][Seemless.childObjects[rt]].toString());
       }
 
     }
