@@ -51,6 +51,9 @@ var Seemless = {
           params.push(req.params[paramName]);
         }
 
+        params.push(req);
+        params.push(res);
+
         params.push(function (err, returnValue) {
           res.header("Access-Control-Allow-Origin", "*");
           res.header("Access-Control-Allow-Headers", "X-Requested-With");
