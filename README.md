@@ -6,7 +6,6 @@ seemless is a nodejs library takes a node.js module and creates a restful API ou
 Sample Code app.js:  
     ```javascript
     var port = 8080;
-    var restify = require('restify');
     var seemless = require("./seemless.js");
     var framework = require("./framework.js");
             
