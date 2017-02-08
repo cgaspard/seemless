@@ -1,56 +1,27 @@
 nodejs / restify / seemless
 ============
 
-seemless is a nodejs library that works in conjunction with restify to build client side apis to access objects as restfull web services
+seemless is a nodejs library takes a node.js module and creates a restful API out of it.  It does so by mapping object properties to routes, and executing the associated functions when a particular route is requested.
 
-Sample Code app.js:
-
+Sample Code app.js:  
+    ```javascript
+    var port = 8080;
     var restify = require('restify');
     var seemless = require("./seemless.js");
     var framework = require("./framework.js");
-        
-    var restServer = restify.createServer();
-    restServer.use(restify.bodyParser());
+            
+    var srv = http.createServer();
 
-    seemless.generateRoutesForClientAPIAccess(framework, "APIName", restServer);
-    seemless.addObjectRoute('/api/framework', framework, "APIName", restServer);
-
-    restServer.listen(4455, function() {
-          console.log('%s listening at %s', restServer.name, restServer.url);
+    //Lets start our server
+    srv.listen(port, function(){
+        //Callback triggered when server is successfully listening.
+        console.log("Server listening on: http://localhost:%s", port);
     });
 
-Sample Code framework.js
+    /// Expose the framework API
+    seemless.generateRoutesForClientAPIAccess('/api/framework.js', framework, "ExportObject", srv);
 
-    var ExportObject = {
+    /// Expose the data object API
+    seemless.generateRoutesForClientAPIAccess('/api/data.js', data, "Data", srv);
 
-        APIObjectName : "ExportObject",
-        
-        addNumbers : function(x, y) {
-            console.log("Called ExportObject.addNumbers(" + x + ", " + y + ")");
-            var number = parseInt(x) + parseInt(y);
-            return number;
-        },
-
-        SubObject : {
-        
-            APIObjectName : "SubObject",
-        
-            subtractNumbers : function(x, y) {
-                console.log("calling SubObject.subtrackNumbers(" + x + ", " + y + ")");
-                var number = parseInt(x) - parseInt(y);
-                return number;
-            }
-        }
-    }
-
-    module.exports = ExportObject;
-
-Explanation:
-
-The following two examples will generate a http server routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
-
-To access the API include /api/framework script in your html.
-
-After doing this, the following is available on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
-
-Calling the functions on the client side will invoke the /ExportObject/addNumbers web service which will call ExportObject.addNumbers() form framework.js
+    ```
