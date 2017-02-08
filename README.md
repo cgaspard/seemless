@@ -1,9 +1,9 @@
-nodejs / restify / seemless
+seemless restful API module
 ============
+At its core, seemless takes on the task of making restful APIs out of javascript objects.   It does this by enumerating the object and linking routes to functions inside the node http server.  In addition, seemless also creates a client side javascript file that maps to the same server side REST API.
 
-seemless is a nodejs library takes a node.js module and creates a restful API out of it.  It does so by mapping object properties to routes, and executing the associated functions when a particular route is requested.
+### Sample Setup Code:  
 
-Sample Code app.js:  
     ```javascript
     var port = 8080;
     var seemless = require("./seemless.js");
