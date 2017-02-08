@@ -3,8 +3,6 @@ nodejs / restify / seemless
 
 seemless is a nodejs library that works in conjunction with restify to build client side apis to access objects as restfull web services
 
-Requires client side jQuery, and restify on the server.
-
 Sample Code app.js:
 
     var restify = require('restify');
@@ -49,10 +47,10 @@ Sample Code framework.js
 
 Explanation:
 
-The following two examples will generate a restify routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
+The following two examples will generate a http server routes to point to "/ExportObject/addNumbers & /ExportObject.SubObject/subtractNumbers"
 
-To access the restify services include /api/framework script in your html.
+To access the API include /api/framework script in your html.
 
-After doing this, the following is avilable on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
+After doing this, the following is available on the client side javascript: ExportObject.addNumbers(x, y) & ExportObject.SubObject.subtractNumbers(x, y);
 
 Calling the functions on the client side will invoke the /ExportObject/addNumbers web service which will call ExportObject.addNumbers() form framework.js

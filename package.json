@@ -3,7 +3,7 @@
   "preferGlobal": true,
   "version": "0.2.8",
   "author": "Corey Gaspard <cgaspard@gmail.com>",
-  "description": "Works with restify server to create a client side javascript jquery ajax calls.",
+  "description": "Works with http server to create a client side javascript jquery ajax calls.",
   "contributors": [
     {
       "name": "Corey Gaspard",
@@ -11,6 +11,9 @@
     }
   ],
   "main": "./src/lib/seemless.js",
+  "scripts": {
+    "start": "node examples/app.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cgaspard/seemless.git"

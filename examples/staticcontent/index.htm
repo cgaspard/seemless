@@ -1,25 +1,27 @@
 <html>
 	<head>
 		<title>
-			Test Me
+			Seemless Testing Page
 		</title>
 		<script src="/api/framework"></script>
 		<script src="/api/data"></script>
-		<script>
+			<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">		<script>
 
 			function GetProperty() {
 				alert(Data.Name);
-
 			}
 
-			function SetProperty() {
-				var userINput = prompt("What do you want to set the property to?");
-				Data.Name = userINput;
+			function SetProperty(value) {
+				if(document.getElementById("namevalue").value === "") {
+					alert("Enter a value into the text box");
+					return;
+				}
+				Data.Name = document.getElementById("namevalue").value;
 				alert(Data.Name);
 			}
 
-			function AddIt() {
-				ExportObject.addNumbers(1, 5, function(returnObj) {
+			function AddIt(a, b) {
+				ExportObject.addNumbers(a, b, function(returnObj) {
 						alert("success: " + returnObj);
 					},
 					function(jqXHR, textStatus, err) {
@@ -27,8 +29,8 @@
 					}
 				);
 			}
-			function SubtractIt() {
-				ExportObject.SubObject.subtractNumbers(2, 1, 
+			function SubtractIt(a, b) {
+				ExportObject.SubObject.subtractNumbers(a, b, 
 					function(returnObj) {
 						alert("success: " + returnObj);
 					},
@@ -60,11 +62,31 @@
 		</script>
 	</head>
 	<body>
-		Static Content Here<br><br>
-		<input type="button" onclick="AddIt();" value="add 1 + 2"> 
-		<input type="button" onclick="SubtractIt();" value="sub 2 -1"> 
-		<input type="button" onclick="GetUsers();" value="GetUser"> 
-		<input type="button" onclick="SetProperty()" value="SetProperty">
-		<input type="button" onclick="GetProperty()" value="GetProperty">
+		<div style="padding-top:40px; padding-left:40px;">
+		<h3>Seemeless Testing Page</h3>
+		<p>Use the examples below to explore how seemeless works</p>
+		<h4>Calling Remote REST API Functions</h4>
+		<div style="padding-left:40px;">
+		<div class="label" for="addbutton">REST API URL: /ExportObject/addNumbers</div>
+		<div class="pure-button" id="addbutton" onclick="AddIt(1, 2);">Javascript: ExportObject.addNumbers(1, 2)</div> 
+		<br /><br />
+		<div class="label" for="subbutton">REST API URL: /ExportObject.SubObject.subtractNumbers</div>
+		<div class="pure-button" id="subbutton" onclick="SubtractIt(6, 2);">Javascript: ExportObject.SubObject.subtractNumbers(6, 2)</div> 
+		<br /><br />
+		<div class="label" for="userbutton">REST API URL: /Data.Entities.User/Get</div>
+		<div class="pure-button" id="userbutton" onclick="GetUsers();">Javascript: Data.Entities.User.Get(4916)</div> 
+		<br /><br />
+		</div>
+		<h4>Setting and Getting Remote Variables </h4>
+		<div style="padding-left:40px;">
+		<div class="label" for="setpropbutton">REST API URL: /Data/Name_get</div>
+		<input type="text" id="namevalue" placeholder="Set Name To:" value=""/>
+		<div class="pure-button" id="setpropbutton" onclick="SetProperty();">Javascript: Data.Name = value</div> 
+		<br /><br />
+		<div class="label" for="getpropbutton">REST API URL: /Data/Name_set</div>
+		<div class="pure-button" id="getpropbutton" onclick="GetProperty();">Javascript: Data.Name</div> 
+		<br /><br />
+		</div>
+		</div>
 	</body>
 </html>
