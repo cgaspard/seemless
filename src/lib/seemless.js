@@ -114,7 +114,7 @@ var Seemless = {
       /// Add a callback method to the params because seemless will always 
       /// pass a callback as a last parameter. When the function is done, it should
       /// call this callback to end the operation.
-      paramAry.push(function (err, returnValue) {
+      var actionCallback = function (err, returnValue) {
         res.setHeader('Content-Type', 'application/json');
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
@@ -127,11 +127,14 @@ var Seemless = {
           res.write(jsonString);
           res.end();
         }
-      });
+      }
+
+      route.action['callBack'] = actionCallback;
+      paramAry.push(actionCallback);
 
       /// Call the function that is registered for this route
       if(typeof(route.action) === "function") {
-        var callResult = JSON.stringify(route.action.apply(route.parentobject, paramAry));
+        var callResult = JSON.stringify(route.action.apply(route.action, paramAry));
       } else {
         if (route.type === "propertyset") {
           route.parentobject[route.childobject] = params
@@ -254,7 +257,7 @@ var Seemless = {
             break;
         }
         case "function": {
-            if (propName.match(/_seemless_/)) {
+            if (propName.match(/^_.*/)) {
               continue;
             }
             routeString = objectToRouteName + "/" + propName;
@@ -279,7 +282,18 @@ var tabCounter = 0;
 
 function getParamNames(func) {
   var funStr = func.toString();
-  return funStr.slice(funStr.indexOf('(') + 1, funStr.indexOf(')')).match(/([^\s,]+)/g);
+  var params = [];
+  params = funStr.slice(funStr.indexOf('(') + 1, funStr.indexOf(')')).match(/([^\s,]+)/g);
+  // console.log("Before: ", params);
+  if(params) {  
+    params = params.filter(function(param) {
+      return !param.match(/^_.*/);
+    });
+  } else {
+    params = [];
+  }
+  // console.log("After: ", params);
+  return params;
 }
 
 function generateParameterReplace(params) {

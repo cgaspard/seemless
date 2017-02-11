@@ -14,8 +14,9 @@ var ExportObject = {
 
 	SubObject : {
 	
-		subtractNumbers : function(x, y) {
-			console.log("calling SubObject.subtractNumbers(" + x + ", " + y + ")");
+		subtractNumbers : function(x, y, _request, _respone, _callBack) {
+			console.log("Is this.callBack == _callBack:", this.callBack == _callBack);
+			console.log("Called SubObject.subtractNumbers(" + x + ", " + y + ")");
 			var number = parseInt(x) - parseInt(y);
 			return number;
 		}
