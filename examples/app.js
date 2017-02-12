@@ -29,7 +29,7 @@ srv.listen(port, function(){
 
 
 /// Expose the framework API
-seemless.generateRoutesForClientAPIAccess('/api/framework', framework, "ExportObject", srv);
+seemless.generateRoutesForClientAPIAccess('/api/framework', framework, "ExportObject", srv, "/frameworkprefix/");
 
 /// Expose the data object
 seemless.generateRoutesForClientAPIAccess('/api/data', data, "Data", srv);
