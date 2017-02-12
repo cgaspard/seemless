@@ -12,7 +12,8 @@
   ],
   "main": "./src/lib/seemless.js",
   "scripts": {
-    "start": "node examples/app.js"
+    "start": "node examples/app.js",
+    "test": "node tests/*.js || true"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   },
   "analyze": false,
   "devDependencies": {
+    "tape": "*"
   },
   "bundledDependencies": [
   ],

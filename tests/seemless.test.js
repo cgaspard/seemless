@@ -1,4 +1,4 @@
-import test from 'tape';
+var test = require('tape');
 
 const before = test;
 const after = test;
@@ -24,12 +24,13 @@ const teardown = (fixtures) => {
 };
 
 
-before('before', function (assert) {
+before('Before', function (assert) {
 
   assert.pass('Do something before tests here');
 
   assert.end();
 });
+
 
 
 test('A test with fixtures', (assert) => {
@@ -62,7 +63,7 @@ test('Assertions with tape.', (assert) => {
 });
 
 
-after('after', (assert) => {
+after('After', (assert) => {
 
   assert.pass('Do something after tests here.');
 
