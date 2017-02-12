@@ -48,9 +48,6 @@ var Seemless = {
         console.error(err);
       });
 
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-
       body = Buffer.concat(body).toString();
       var params = body;
       try {
@@ -131,6 +128,7 @@ var Seemless = {
         res.setHeader('Content-Type', 'application/json');
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+        res.statusCode = 200;
         var jsonString = JSON.stringify(returnValue);
         if (err) {
           res.statusCode = 500;
@@ -163,6 +161,7 @@ var Seemless = {
       /// If callResult has a value, then we are going to exepct that the called function
       /// was synchronous.   In that case we need to make the callback now to end the request.
       if (callResult !== undefined) {
+        res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
