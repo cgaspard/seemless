@@ -3,69 +3,160 @@ var test = require('tape');
 const before = test;
 const after = test;
 
-// beforeEach/afterEach rely on shared state.
-// That's a big anti-pattern for testing.
+function getAPIObject() {
 
-// It's also silly to run something before and after
-// ever test -- many of your tests won't need it.
-
-// Try this, instead:
-const setup = () => {
-  const fixtures = {};
+  function buildAPI() {
+    return {
+      Math: {
+        add: function(a,b) {
+          return a + b;
+        },
+        multiple: function(a, b) {
+          return a * b;
+        }
+      },
+      Strings: {
+        concat: function(a, b) {
+          return a + b;
+        }
+      },
+      Objects: {
+        getgenericobject: function() {
+          return {"name": "object"};
+        }
+      }
+    }
+  };
 
   // Insert your fixture code here.
   // Make sure you're creating fresh objects each
   // time setup() is called.
-  return fixtures;
+  return buildAPI();
 };
 
-const teardown = (fixtures) => {
-  // Dispose of your fixtures here.
+function createHTTTPServer(port, assert, callBack) {
+  const http = require('http');
+  if(port === undefined) { port = 8080; }
+
+  // Create an HTTP server
+  var srv = http.createServer();
+
+  //Lets start our server
+  srv.listen(port, function(){
+      //Callback triggered when server is successfully listening.
+      if(assert) { assert.comment("Server listening on port " + port); }
+      if(callBack) {
+        callBack();
+      }
+  });
+  return srv;
+}
+
+function closeHTTPServer(server, assert) {
+  if(assert) { assert.comment("Closed Server"); }
+  server.close();
+}
+
+function getURL(options, assert, callBack) {
+    if(assert) { assert.comment("Getitng URL: " + options); }
+    var http = require('http');
+    http.get(options, function(res) {
+      if(assert) { assert.comment("Getting Response: " + options); }
+      const statusCode = res.statusCode;
+      const contentType = res.headers['content-type'];
+
+      let error;
+      if (statusCode !== 200) {
+        error = new Error(`Request Failed.\n` +
+                          `Status Code: ${statusCode}`);
+      }
+      if (error) {
+        callBack(error);
+        // consume response data to free up memory
+        res.resume();
+        return;
+      }
+
+      res.setEncoding('utf8');
+      let rawData = '';
+      res.on('data', function(chunk) {
+        rawData += chunk;
+      });
+      res.on('end', () => {
+        try {
+          // let parsedData = JSON.parse(rawData);
+          callBack(null, rawData);
+        } catch (e) {
+          callBack(e);
+        }
+      });
+    }).on('error', (e) => {
+      callBack(e);
+    }).end();
 };
 
+test('Create Create API Objects With All Parameters', function(assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var srv = createHTTTPServer(8080, assert, function() {
+    var api = getAPIObject();
 
-before('Before', function (assert) {
-
-  assert.pass('Do something before tests here');
-
-  assert.end();
+    try {
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/api/");
+    } catch(ex) {
+      assert.fail("Failed to create routes on http server:", ex);
+      srv.close();
+      assert.end();
+    }
+    srv.close();
+    assert.pass();
+    assert.end();
+  });
 });
 
+test('Create Create API Objects With No Prefix', function(assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var srv = createHTTTPServer(8080, assert, function() {
+    var api = getAPIObject();
 
-
-test('A test with fixtures', (assert) => {
-  const fixture = setup();
-
-  assert.equal(typeof fixture, 'object',
-    'fixture should return an object');
-
-  teardown(fixture);
-  assert.end();
+    try {
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv);
+    } catch(ex) {
+      srv.close();
+      assert.fail("Failed to create routes on http server:", ex);
+      assert.end();
+    }
+    
+    srv.close();
+    assert.pass();
+    assert.end();
+  });
 });
 
-
-test('A passing test', (assert) => {
-
-  assert.pass('This test will pass.');
-
-  assert.end();
-});
-
-
-test('Assertions with tape.', (assert) => {
-  const expected = 'something to test';
-  const actual = 'sonething to test';
-
-  assert.equal(actual, expected,
-    'Given two mismatched values, .equal() should produce a nice bug report');
-
-  assert.end();
-});
-
-
-after('After', (assert) => {
-
-  assert.pass('Do something after tests here.');
-
-  assert.end();
+test('Client Side API File Created', function(assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var api = getAPIObject();
+  var srv = createHTTTPServer(8080, assert, function() {
+    try {
+      // assert.comment(srv);
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/test");
+      getURL("http://localhost:8080/api/framework", assert, function(err, result) {
+        assert.comment("Done Making URL Request");
+        if(err) {
+          assert.fail(err);
+        } else {
+          if(result.length > 0) {
+            assert.pass();
+          } else {
+            assert.fail("Nothign was returned.");
+          }
+        }
+        srv.close();
+        assert.end();
+      });
+    } catch(ex) {
+      srv.close();
+      assert.fail(ex);
+      assert.end()
+    }
+  });
 });

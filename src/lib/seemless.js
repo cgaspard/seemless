@@ -10,6 +10,7 @@ var Seemless = {
   serverRootPath: "",
   listenerSetup: false,
   clientAPIRoutes: [],
+  httpServer: null,
 
   generateAPIForObject: function (objectToGenerate, rootObjectname, apiURLPrefix) {
 
@@ -65,7 +66,13 @@ var Seemless = {
       if(foundAPIRoute) {
         Seemless.dispathClientAPIFileRequest(foundAPIRoute,req,res,params);
       } else {
-        Seemless.dispatchClientAPICall(req,res,params);
+        var foundDispatch = Seemless.dispatchClientAPICall(req,res,params);
+
+        if(!foundDispatch && Seemless.httpServer.listenerCount("request") === 1) {
+          /// We are the only request listern, and we didn't find a route.
+          res.statusCode = 404;
+          res.end();
+        }
       }
     });
   },
@@ -76,6 +83,7 @@ var Seemless = {
     if(apiURLPrefix.length > 0 && !apiURLPrefix.endsWith("/")) { apiURLPrefix += "/"};
     if(Seemless.debug) { console.log("Seemeless, API URL Prefix : ", apiURLPrefix) }; 
 
+    Seemless.httpServer = httpServer;
     Seemless.clientAPIRoutes.push({"path": clientURL, "object": apiObject, "name":namespace, "prefix": apiURLPrefix });
     if(Seemless.debug) { console.log("Seemeless, adding client side javascript file at", clientURL, "for object", namespace); }
     if(!Seemless.listenerSetup) {
@@ -100,12 +108,13 @@ var Seemless = {
    * @param {any} body
    */
   dispatchClientAPICall: function (req, res, params) {
+    var foundRoute = false;
     for (var rt = 0; rt < Seemless.routes.length; rt++) {
       var paramAry = [];
       var route = Seemless.routes[rt];
       /// Skip the route if the url isn't a match
       if (req.url !== route.path) { continue; }
-
+      foundRoute = true;
       if(typeof(params) === "object" && params !== null) {
         for (var paramName in params) {
           paramAry.push(params[paramName]);
@@ -148,7 +157,7 @@ var Seemless = {
         } 
         res.write(route.parentobject[route.childobject.toString()]);
         res.end();
-        return;
+        return foundRoute;
       }
 
       /// If callResult has a value, then we are going to exepct that the called function
@@ -160,8 +169,9 @@ var Seemless = {
         res.write(callResult.toString());
         res.end();
       }
-      return;
+      return foundRoute;
     }
+    return foundRoute;
     //console.log("No routes found for request");
   },
   
