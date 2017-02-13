@@ -112,8 +112,15 @@ document.addEventListener("load", function() {
 
 ### Restify Compatibilty
 
+To make seemless work along side restify, utilize the restify servers .server property when calling generateRoutesForClientAPIAccess.  Like so:
+
+```
+seemless.generateRoutesForClientAPIAccess('/path/to/client.js', MyAPI, "MyAPI", restifyServer, "/v1/");
+```
+
 In order for seemless to expose and API object along side restify server make sure you have at least one post route setup.  Otherwise all post request will be rejected by restify before seemless can respond.  If you have no other post routes in restify add a post route that does nothing to make sure seemless can operate..
 
 ``` 
-restServer.post(/\.*/, function (req, res, next) { next(); });
+restifyServer.post(/\.*/, function (req, res, next) { next(); });
 ```
+
