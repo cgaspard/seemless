@@ -102,13 +102,13 @@ document.addEventListener("load", function() {
 
         clientURL (string) - This parameter is the location at which the client side javascript file will be exposed.
 
-        apiObject (object) - This is the modules we will be exposing as a restfulAPI.
+        apiObject (object) - This is the modules we will be exposing as a restful API.
 
         namespace (string) - On the client side, this string will be the name of the variable that you use to access the API.
 
         httpServer (object) - This is the node http server to expose the API on.
 
-        apiURLPrefix (optional, string) - If you want to prefix all of you restulf API with a string, use this parameter to specify the prefix location.
+        apiURLPrefix (optional, string) - If you want to prefix all of you restful API with a string, use this parameter to specify the prefix location.
 
 ### Restify Compatibilty
 
