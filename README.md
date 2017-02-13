@@ -104,7 +104,7 @@ document.addEventListener("load", function() {
 });
 ```
 
-### API Reference
+## API Reference
 
 There is only one function call to get seemless to expose the restful API.
 
