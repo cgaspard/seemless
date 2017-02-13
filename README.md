@@ -84,7 +84,7 @@ document.addEventListener("load", function() {
     MyAPI.add(1, 2, addDone, addError);
 
     function addDone(result) {
-        alert(result);
+        alert(result);  /// In this case it should alert 3;
     }
     function addError(err) {
         alert("We had an error calling our API:" + err.message);
