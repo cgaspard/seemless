@@ -9,6 +9,16 @@ Install seemless using npm, or package.json dependancy
 npm install seemless
 ```
 
+### Example
+
+This project comes with a fully funciton node.js server that exposes a sample API.   This server is contained inside the /examples folder.   To run the example:
+
+```
+git clone https://github.com/cgaspard/seemless.git
+cd seemless
+npm start
+```
+
 ## Steps to setup seemless
 
 ### Step 1: Create a Nodejs module for your API
