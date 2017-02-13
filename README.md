@@ -19,6 +19,8 @@ cd seemless
 npm start
 ```
 
+Browse to http://localhost:8080/ to see a sample client side file that utilizes the restful API.
+
 ## Steps to setup seemless
 
 ### Step 1: Create a Nodejs module for your API
