@@ -4,16 +4,6 @@ At its core, seemless takes on the task of making restful APIs out of javascript
 
 Seemless is compatible works by with node.js http server, and can work side by side with expresss and resitfy node.js modules.  
 
-In order for seemless to expose and API object along side restify server make sure you have at least one post route setup.  If you have no other post routes in restify, you can add one like this.
-
-``` 
-restServer.post(/\.*/, function (req, res, next) {
-  next();
-});
-```
-
-
-
 ## Steps to setup seemless
 
 ### Step 1: Create a Nodejs module for your API
@@ -116,3 +106,11 @@ document.addEventListener("load", function() {
         httpServer (object) - This is the node http server to expose the API on.
 
         apiURLPrefix (optional, string) - If you want to prefix all of you restulf API with a string, use this parameter to specify the prefix location.
+
+### Restify Compatibilty
+
+In order for seemless to expose and API object along side restify server make sure you have at least one post route setup.  Otherwise all post request will be rejected by restify before seemless can respond.  If you have no other post routes in restify add a post route that does nothing to make sure seemless can operate..
+
+``` 
+restServer.post(/\.*/, function (req, res, next) { next(); });
+```
