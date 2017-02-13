@@ -4,6 +4,11 @@ At its core, seemless takes on the task of making restful APIs out of javascript
 
 Seemless works with node.js http server.  However, it can work side by side with expresss and resitfy node.js modules.   See compatibilty notes at the end of the README.
 
+Install seemless using npm, or package.json dependancy
+```
+npm install seemless
+```
+
 ## Steps to setup seemless
 
 ### Step 1: Create a Nodejs module for your API
