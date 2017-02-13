@@ -81,12 +81,12 @@ The first parameter in the generateRoutesForClientAPIAccess call tells seemless 
 
 ```
 document.addEventListener("load", function() {
-    MyAPI.add(1, 2, addDone, addError);
+    MyAPI.add(1, 2, successCallback, errorCallback);
 
-    function addDone(result) {
+    function successCallback(result) {
         alert(result);  /// In this case it should alert 3;
     }
-    function addError(err) {
+    function errorCallback(err) {
         alert("We had an error calling our API:" + err.message);
     }
 });
