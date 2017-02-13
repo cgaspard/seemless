@@ -2,7 +2,7 @@ seemless restful API module
 ============
 At its core, seemless takes on the task of making restful APIs out of javascript objects.   It does this by enumerating the object and linking routes to functions inside the node http server.  In addition, seemless also creates a client side javascript file that maps to the same server side REST API.
 
-Seemless is compatible works by with node.js http server, and can work side by side with expresss and resitfy node.js modules.  
+Seemless works with node.js http server.  However, it can work side by side with expresss and resitfy node.js modules.   See compatibilty notes at the end of the README.
 
 ## Steps to setup seemless
 
