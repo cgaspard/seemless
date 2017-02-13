@@ -31,7 +31,7 @@ var MyAPI = {
 module.exports = MyAPI;
 ```
 
-### Step 2: Create an instane of an http server, requie the API module, and tell seemless to make an API out of it.
+### Step 2: Create an instance of an http server, requie the API module, and tell seemless to make an API out of it.
 
 ```
 const http = require('http');
