@@ -66,15 +66,13 @@ First it adds routes into our http server that when called will execute the func
 
 The second thing seemless does is generate a client side JS file that can be used in browser to call the API using the same object structure that resides in node.js application. 
 
-The first parameter in the generateRoutesForClientAPIAccess call tells seemless the location to expose this Javascript file.
-
 In our case we would use:
 
 ```
 <script src="/path/to/client.js"></script>
 ```
 
-From there we could utilize the API on the client like so:
+The first parameter in the generateRoutesForClientAPIAccess call tells seemless the location to expose this Javascript file.  From there we could utilize the API on the client like so:
 
 ```
 document.addEventListener("load", function() {
