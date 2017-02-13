@@ -15,6 +15,15 @@
         },
         {
             "type": "node",
+            "request": "launch",
+            "name": "Launch Test",
+            "program": "${workspaceRoot}/tests/seemless.test.js",
+            "cwd": "${workspaceRoot}",
+            "outFiles": [],
+            "sourceMaps": true
+        },        
+        {
+            "type": "node",
             "request": "attach",
             "name": "Attach to Process",
             "port": 5858,

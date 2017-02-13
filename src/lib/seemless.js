@@ -8,7 +8,6 @@ var Seemless = {
   debug: false,
   routes: [],
   serverRootPath: "",
-  listenerSetup: false,
   clientAPIRoutes: [],
   httpServer: null,
 
@@ -83,8 +82,8 @@ var Seemless = {
     Seemless.httpServer = httpServer;
     Seemless.clientAPIRoutes.push({"path": clientURL, "object": apiObject, "name":namespace, "prefix": apiURLPrefix });
     if(Seemless.debug) { console.log("Seemeless, adding client side javascript file at", clientURL, "for object", namespace); }
-    if(!Seemless.listenerSetup) {
-      Seemless.listenerSetup = true;
+    /// Check to see if any of the request listeners on the http server are the one for seemeless
+    if(httpServer.listeners("request").indexOf(Seemless.onHTTPRequest) === -1) {
       httpServer.addListener('request', Seemless.onHTTPRequest);
     }
     Seemless.BuildRoutesForObject(apiObject, httpServer, namespace, undefined, apiURLPrefix);

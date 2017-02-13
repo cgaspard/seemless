@@ -42,13 +42,15 @@ function createHTTTPServer(port, assert, callBack) {
   var srv = http.createServer();
 
   //Lets start our server
-  srv.listen(port, function(){
+  srv.listen(port, function(innerCallBack) {
+    return function(){
       //Callback triggered when server is successfully listening.
       if(assert) { assert.comment("Server listening on port " + port); }
-      if(callBack) {
-        callBack();
+      if(innerCallBack) {
+        innerCallBack();
       }
-  });
+    }
+  }(callBack));
   return srv;
 }
 
@@ -57,8 +59,14 @@ function closeHTTPServer(server, assert) {
   server.close();
 }
 
+function destructor(params) {
+  for(var i = 0; i < params.length; i++) {
+    params[i] = null;
+  }
+}
+
 function getURL(options, assert, callBack) {
-    if(assert) { assert.comment("Getitng URL: " + options); }
+    // if(assert) { assert.comment("Getitng URL: " + options); }
     var http = require('http');
     http.get(options, function(res) {
       if(assert) { assert.comment("Getting Response: " + options); }
@@ -140,6 +148,7 @@ test('Client Side API File Created', function(assert) {
       // assert.comment(srv);
       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/test");
       getURL("http://localhost:8080/api/framework", assert, function(err, result) {
+      //getURL("http://www.google.com", assert, function(err, result) {
         assert.comment("Done Making URL Request");
         if(err) {
           assert.fail(err);
@@ -147,7 +156,7 @@ test('Client Side API File Created', function(assert) {
           if(result.length > 0) {
             assert.pass();
           } else {
-            assert.fail("Nothign was returned.");
+            assert.fail("Nothing was returned.");
           }
         }
         srv.close();
