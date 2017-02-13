@@ -106,21 +106,43 @@ document.addEventListener("load", function() {
 
 ### API Reference
 
-    There is only one function call to get seemless to expose the restful API.
+There is only one function call to get seemless to expose the restful API.
 
-    ### generateRoutesForClientAPIAccess: function (clientURL, apiObject, namespace, httpServer, apiURLPrefix)
+### generateRoutesForClientAPIAccess: function (clientURL, apiObject, namespace, httpServer, apiURLPrefix)
 
-    ### Paramters Definition
+### Paramters Definition
 
-        clientURL (string) - This parameter is the location at which the client side javascript file will be exposed.
+    clientURL (string) - This parameter is the location at which the client side javascript file will be exposed.
 
-        apiObject (object) - This is the modules we will be exposing as a restful API.
+    apiObject (object) - This is the modules we will be exposing as a restful API.
 
-        namespace (string) - On the client side, this string will be the name of the variable that you use to access the API.
+    namespace (string) - On the client side, this string will be the name of the variable that you use to access the API.
 
-        httpServer (object) - This is the node http server to expose the API on.
+    httpServer (object) - This is the node http server to expose the API on.
 
-        apiURLPrefix (optional, string) - If you want to prefix all of you restful API with a string, use this parameter to specify the prefix location.
+    apiURLPrefix (optional, string) - If you want to prefix all of you restful API with a string, use this parameter to specify the prefix location.
+
+### Notes on API module functions and client side javascript
+
+Function calls on the API object are passed the request, response, and a callBack method as their last 3 parameters. 
+Here is the example from above:
+
+```
+    /// This function will be exposed at http://[serverip]/MyAPI/add
+    add: function(a, b, _request, _response, _callback) {
+        return a + b;
+    },
+```
+
+The last three parameters all start with an underscore.   This is important because it tells seemless that these parameters should not be exposed to the client side javascript.  You can also use this to create your own hidden parameters.
+
+On the client, the generated javascript file sets up an object that looks like this.
+
+```
+    object.add(a, b, successCallback, errorCallback);
+```
+
+Note that all seemless API calls are made asynchronously so be sure to setup the two callbacks.
 
 ### Restify Compatibilty
 
