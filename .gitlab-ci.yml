@@ -1,0 +1,9 @@
+before_script:
+  - apt-get update -qq && apt-get install -y -qq nodejs
+  - npm update
+  - npm install seemless
+  - npm install tape
+
+test:
+  script:
+    - node test/*.js
