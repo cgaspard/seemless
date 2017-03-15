@@ -1,77 +1,71 @@
 var test = require('tape');
 
-// const before = test;
-// const after = test;
+const before = test;
+const after = test;
 
-// test('Create Create API Objects With All Parameters', function (assert) {
-//   var seemless = require("../src/lib/seemless.js");
-//   var api = getAPIObject();
-//   var srv = createHTTTPServer(8080, assert, function () {
-//     try {
-//       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/api/");
-//     } catch (ex) {
-//       assert.fail("Failed to create routes on http server:", ex);
-//       srv.close();
-//       assert.end();
-//     }
-//     srv.close();
-//     assert.pass();
-//     assert.end();
-//   });
-// });
-
-// test('Create Create API Objects With No Prefix', function (assert) {
-//   var seemless = require("../src/lib/seemless.js");
-//   var api = getAPIObject();
-//   var srv = createHTTTPServer(8080, assert, function () {
-//     try {
-//       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv);
-//     } catch (ex) {
-//       srv.close();
-//       assert.fail("Failed to create routes on http server:", ex);
-//       assert.end();
-//     }
-
-//     srv.close();
-//     assert.pass();
-//     assert.end();
-//   });
-// });
-
-// test('Client Side API File Created', function (assert) {
-//   var seemless = require("../src/lib/seemless.js");
-//   var api = getAPIObject();
-//   var srv = createHTTTPServer(8080, assert, function () {
-//     try {
-//       // assert.comment(srv);
-//       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/test");
-//       getURL("http://localhost:8080/api/framework", assert, function (err, result) {
-//         assert.comment("Done Making URL Request");
-//         if (err) {
-//           assert.fail(err);
-//         } else {
-//           if (result.length > 0) {
-//             assert.pass();
-//           } else {
-//             assert.fail("Nothing was returned.");
-//           }
-//         }
-//         srv.close();
-//         assert.end();
-//       });
-//     } catch (ex) {
-//       srv.close();
-//       assert.fail(ex);
-//       assert.end()
-//     }
-//   });
-// });
-
-  test('Failure example', function (assert) {
-      assert.fail("Failed for testing");
+test('Create Create API Objects With All Parameters', function (assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var api = getAPIObject();
+  var srv = createHTTTPServer(8080, assert, function () {
+    try {
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/api/");
+    } catch (ex) {
+      assert.fail("Failed to create routes on http server:", ex);
+      srv.close();
       assert.end();
+    }
+    srv.close();
+    assert.pass();
+    assert.end();
   });
+});
 
+test('Create Create API Objects With No Prefix', function (assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var api = getAPIObject();
+  var srv = createHTTTPServer(8080, assert, function () {
+    try {
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv);
+    } catch (ex) {
+      srv.close();
+      assert.fail("Failed to create routes on http server:", ex);
+      assert.end();
+    }
+
+    srv.close();
+    assert.pass();
+    assert.end();
+  });
+});
+
+test('Client Side API File Created', function (assert) {
+  var seemless = require("../src/lib/seemless.js");
+  var api = getAPIObject();
+  var srv = createHTTTPServer(8080, assert, function () {
+    try {
+      // assert.comment(srv);
+      seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/test");
+      getURL("http://localhost:8080/api/framework", assert, function (err, result) {
+        assert.comment("Done Making URL Request");
+        if (err) {
+          assert.fail(err);
+        } else {
+          if (result.length > 0) {
+            assert.pass();
+          } else {
+            assert.fail("Nothing was returned.");
+          }
+        }
+        srv.close();
+        assert.end();
+      });
+    } catch (ex) {
+      srv.close();
+      assert.fail(ex);
+      assert.end()
+    }
+  });
+});
 
 function getAPIObject() {
 
