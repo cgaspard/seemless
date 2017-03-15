@@ -8,4 +8,4 @@ before_script:
 
 unit_tests:
   script:
-    - tape test/*.js
+    - tape ./test/*.js
