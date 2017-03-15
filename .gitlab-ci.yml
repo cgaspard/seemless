@@ -1,5 +1,5 @@
 
-image: node:latest
+image: node:7.7.2
 
 before_script:
   - npm update
