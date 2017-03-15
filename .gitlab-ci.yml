@@ -3,7 +3,6 @@ image: node:7.7.2
 
 before_script:
   - npm update
-  - npm install seemless
   - npm install tape
 
 test:
