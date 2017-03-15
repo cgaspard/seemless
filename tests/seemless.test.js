@@ -10,7 +10,6 @@ test('Create Create API Objects With All Parameters', function (assert) {
     try {
       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv, "/api/");
     } catch (ex) {
-      process.exitCode = 1;
       assert.fail("Failed to create routes on http server:", ex);
       srv.close();
       assert.end();
@@ -29,7 +28,6 @@ test('Create Create API Objects With No Prefix', function (assert) {
       seemless.generateRoutesForClientAPIAccess('/api/framework', api, "api", srv);
     } catch (ex) {
       srv.close();
-      process.exitCode = 1;
       assert.fail("Failed to create routes on http server:", ex);
       assert.end();
     }
@@ -50,13 +48,11 @@ test('Client Side API File Created', function (assert) {
       getURL("http://localhost:8080/api/framework", assert, function (err, result) {
         assert.comment("Done Making URL Request");
         if (err) {
-          process.exitCode = 1;
           assert.fail(err);
         } else {
           if (result.length > 0) {
             assert.pass();
           } else {
-            process.exitCode = 1;
             assert.fail("Nothing was returned.");
           }
         }
@@ -65,7 +61,6 @@ test('Client Side API File Created', function (assert) {
       });
     } catch (ex) {
       srv.close();
-      process.exitCode = 1;
       assert.fail(ex);
       assert.end()
     }
@@ -73,7 +68,6 @@ test('Client Side API File Created', function (assert) {
 });
 
 test('Failure example', function (assert) {
-    process.exitCode = 1;
     assert.fail("Failed for testing");
     assert.end();
 });
