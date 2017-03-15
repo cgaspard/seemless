@@ -67,6 +67,11 @@ test('Client Side API File Created', function (assert) {
   });
 });
 
+test('Failure example', function (assert) {
+    assert.fail("Failed for testing");
+    assert.end();
+});
+
 
 function getAPIObject() {
 

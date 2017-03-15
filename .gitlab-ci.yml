@@ -5,6 +5,6 @@ before_script:
   - npm update
   - npm install -g tape
 
-test:
+unit_tests:
   script:
     - tape test/*.js
