@@ -12,7 +12,7 @@ variables:
   RELEASE_IMAGE_CONTAINER: "git.mygait.com:4567/cgaspard/seemless"
   RELEASE_TAG: "latest"
   RELEASE_EXTERNAL_PORT: "9002"
-  RELEASE_CONTAINER_NAME: "seemeless-staging"
+  RELEASE_CONTAINER_NAME: "seemless-staging"
 
 unit_tests:
   stage: test
