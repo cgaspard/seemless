@@ -63,7 +63,7 @@ deploy-qa-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $TEST_IMAGE_CONTAINER:$TEST_TAG
     - docker stop $TEST_CONTAINER_NAME || true && docker rm $TEST_CONTAINER_NAME || true
-    - docker run --name=$TEST_CONTAINER_NAME --restart=always -p 9001:8080  -d $TEST_IMAGE_CONTAINER:$TEST_TAG
+    - docker run --name=$TEST_CONTAINER_NAME --restart=always -p $TEST_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT  -d $TEST_IMAGE_CONTAINER:$TEST_TAG
   only:
     - dev
   tags:
@@ -81,7 +81,7 @@ deploy-staging-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
     - docker stop $RELEASE_CONTAINER_NAME || true && docker rm $RELEASE_CONTAINER_NAME || true
-    - docker run --name=$RELEASE_CONTAINER_NAME --restart=always -p 9002:8080  -d $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
+    - docker run --name=$RELEASE_CONTAINER_NAME --restart=always -p $RELEASE_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT  -d $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
   only:
     - master
   tags:
