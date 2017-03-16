@@ -58,13 +58,11 @@ deploy-qa-container:
   environment: 
     name: qa
   before_script:
-    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $TEST_IMAGE_CONTAINER:$TEST_TAG
-    - docker stop $TEST_CONTAINER_NAME
-    - docker rm $TEST_CONTAINER_NAME    
+    - docker stop $TEST_CONTAINER_NAME || true && docker rm $TEST_CONTAINER_NAME || true
     - docker run $TEST_IMAGE_CONTAINER:$TEST_TAG --name=$TEST_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p $TEST_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT
   only:
     - dev
@@ -76,13 +74,11 @@ deploy-staging-container:
   environment: 
     name: staging
   before_script:
-    - apt update && apt install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
-    - docker stop $RELEASE_CONTAINER_NAME
-    - docker rm $RELEASE_CONTAINER_NAME    
+    - docker stop $RELEASE_CONTAINER_NAME || true && docker rm $RELEASE_CONTAINER_NAME || true
     - docker run $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG --name=$RELEASE_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p $RELEASE_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT
   only:
     - master
