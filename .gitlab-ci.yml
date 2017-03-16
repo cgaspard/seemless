@@ -81,7 +81,7 @@ deploy-staging-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
     - docker stop $RELEASE_CONTAINER_NAME || true && docker rm $RELEASE_CONTAINER_NAME || true
-    - docker run -d --name=$RELEASE_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p 9002:$8080 $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG /usr/bin/env
+    - docker run -d --name=$RELEASE_CONTAINER_NAME --restart=always -p 9002:$8080 $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
   only:
     - master
   tags:
