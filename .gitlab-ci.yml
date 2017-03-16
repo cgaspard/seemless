@@ -14,9 +14,8 @@ variables:
   RELEASE_EXTERNAL_PORT: "9002"
   RELEASE_CONTAINER_NAME: "seemeless-staging"
 
-image: node:7.7.2
-
 unit_tests:
+  image: node:7.7.2
   stage: test
   before_script:
     - npm update --silent > /dev/null
