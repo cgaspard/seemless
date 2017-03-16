@@ -23,7 +23,7 @@ build-qa-container:
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
-    - docker build --file .dockerfile -t qalatest .
+    - docker build --file .dockerfile -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
   only:
     - dev
@@ -34,7 +34,7 @@ build-staging-container:
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
-    - docker build --file .dockerfile -t latest .
+    - docker build --file .dockerfile -t $CONTAINER_RELEASE_IMAGE .
     - docker push $CONTAINER_RELEASE_IMAGE
   only: 
     - master
