@@ -14,21 +14,21 @@ variables:
   RELEASE_EXTERNAL_PORT: "9002"
   RELEASE_CONTAINER_NAME: "seemeless-staging"
 
-image: node:7.7.2
-
 unit_tests:
   stage: test
+  image: node:7.7.2
   before_script:
     - npm update --silent > /dev/null
     - npm install --silent -g tape > /dev/null
     - npm install --silent -g faucet > /dev/null
   script:
     - tape tests/*.js | faucet
+  tags:
+    - nodejs-7.7.2	
 
 build-qa-container:
   stage: build
   before_script:
-    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
@@ -36,6 +36,8 @@ build-qa-container:
     - docker push $TEST_IMAGE_CONTAINER:$TEST_TAG
   only:
     - dev
+  tags:
+    - shell
 
 build-staging-container:
   stage: build
@@ -49,7 +51,7 @@ build-staging-container:
   only: 
     - master
   tags:
-    - nodejs-7.7.2
+    - shell
 
 deploy-qa-container:
   stage: deploy
