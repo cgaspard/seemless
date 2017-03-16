@@ -1,11 +1,33 @@
+stages:
+  - test
+  - build
 
-image: node:7.7.2
-
-before_script:
-  - npm update --silent > /dev/null
-  - npm install --silent -g tape > /dev/null
-  - npm install --silent -g faucet > /dev/null
+variables:
+  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemeless:qalatest
+  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemeless:latest
 
 unit_tests:
+  image: node:7.7.2
+  stage: test
+  before_script:
+    - npm update --silent > /dev/null
+    - npm install --silent -g tape > /dev/null
+    - npm install --silent -g faucet > /dev/null
   script:
     - tape tests/*.js | faucet
+
+build-qa-container:
+  stage: build
+  script: 
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
+    - docker build -t --file .dockerfile qalatest .
+    - docker push $CONTAINER_TEST_IMAGE
+  only: dev
+
+build-staging-container:
+  stage: build
+  script: 
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
+    - docker build -t --file .dockerfile latest .
+    - docker push $CONTAINER_RELEASE_IMAGE
+  only: master
