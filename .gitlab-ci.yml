@@ -48,6 +48,8 @@ build-staging-container:
     - docker push $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
   only: 
     - master
+  tags:
+    - nodejs-7.7.2
 
 deploy-qa-container:
   stage: deploy
@@ -64,13 +66,15 @@ deploy-qa-container:
     - docker run $TEST_IMAGE_CONTAINER:$TEST_TAG --name=$TEST_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p $TEST_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT
   only:
     - dev
+  tags:
+    - shell
 
 deploy-staging-container:
   stage: deploy
   environment: 
     name: staging
   before_script:
-    - apt-get update && apt-get install docker
+    - apt update && apt install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
@@ -80,3 +84,5 @@ deploy-staging-container:
     - docker run $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG --name=$RELEASE_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p $RELEASE_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT
   only:
     - master
+  tags:
+    - shell
