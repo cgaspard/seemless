@@ -14,8 +14,9 @@ variables:
   RELEASE_EXTERNAL_PORT: "9002"
   RELEASE_CONTAINER_NAME: "seemeless-staging"
 
+image: node:7.7.2
+
 unit_tests:
-  image: node:7.7.2
   stage: test
   before_script:
     - npm update --silent > /dev/null
@@ -27,6 +28,7 @@ unit_tests:
 build-qa-container:
   stage: build
   before_script:
+    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
@@ -38,6 +40,7 @@ build-qa-container:
 build-staging-container:
   stage: build
   before_script:
+    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
@@ -48,8 +51,10 @@ build-staging-container:
 
 deploy-qa-container:
   stage: deploy
-  environment: qa
+  environment: 
+    name: qa
   before_script:
+    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
@@ -62,8 +67,10 @@ deploy-qa-container:
 
 deploy-staging-container:
   stage: deploy
-  environment: staging
+  environment: 
+    name: staging
   before_script:
+    - apt-get update && apt-get install docker
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
