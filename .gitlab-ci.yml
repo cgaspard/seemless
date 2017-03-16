@@ -6,8 +6,9 @@ variables:
   CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemeless:qalatest
   CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemeless:latest
 
+image: node:7.7.2
+
 unit_tests:
-  image: node:7.7.2
   stage: test
   before_script:
     - npm update --silent > /dev/null
