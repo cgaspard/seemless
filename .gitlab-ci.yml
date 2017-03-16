@@ -4,15 +4,15 @@ stages:
   - deploy
 
 variables:
-  CONTAINER_INTERNAL_PORT: 9092
-  TEST_IMAGE_CONTAINER: git.mygait.com:4567/cgaspard/seemless
-  TEST_TAG: qalatest
-  TEST_EXTERNAL_PORT: 9001
-  TEST_CONTAINER_NAME: seemless-qa
-  RELEASE_IMAGE_CONTAINER: git.mygait.com:4567/cgaspard/seemless
-  RELEASE_TAG: latest
-  RELEASE_EXTERNAL_PORT: 9002
-  RELEASE_CONTAINER_NAME: seemeless-staging
+  CONTAINER_INTERNAL_PORT: "9092"
+  TEST_IMAGE_CONTAINER: "git.mygait.com:4567/cgaspard/seemless"
+  TEST_TAG: "qalatest"
+  TEST_EXTERNAL_PORT: "9001"
+  TEST_CONTAINER_NAME: "seemless-qa"
+  RELEASE_IMAGE_CONTAINER: "git.mygait.com:4567/cgaspard/seemless"
+  RELEASE_TAG: "latest"
+  RELEASE_EXTERNAL_PORT: "9002"
+  RELEASE_CONTAINER_NAME: "seemeless-staging"
 
 image: node:7.7.2
 
@@ -68,7 +68,7 @@ deploy-staging-container:
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
-    - docker pull $RELEASE_IMAGE_CONTAINER:$TEST_TAG
+    - docker pull $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
     - docker stop $RELEASE_CONTAINER_NAME
     - docker rm $RELEASE_CONTAINER_NAME    
     - docker run $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG --name=$RELEASE_CONTAINER_NAME --restart=always -e HTTP_PORT=$CONTAINER_INTERNAL_PORT -p $RELEASE_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT
