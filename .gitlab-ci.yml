@@ -22,7 +22,8 @@ build-qa-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build -t --file .dockerfile qalatest .
     - docker push $CONTAINER_TEST_IMAGE
-  only: dev
+  only:
+    - dev
 
 build-staging-container:
   stage: build
@@ -30,4 +31,5 @@ build-staging-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build -t --file .dockerfile latest .
     - docker push $CONTAINER_RELEASE_IMAGE
-  only: master
+  only: 
+    - master
