@@ -2,6 +2,8 @@ const http = require('http');
 const staticPrefix = "/staticcontent";
 var port = 8080;
 
+// console.log(process.env["HTTP_PORT"]);
+
 /// check for the port env variable
 if(process.env !== undefined && process.env.HTTP_PORT !== undefined) {
     port = process.env.HTTP_PORT;
