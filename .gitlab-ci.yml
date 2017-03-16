@@ -19,6 +19,8 @@ unit_tests:
 
 build-qa-container:
   stage: build
+  before_script:
+    - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build -t --file .dockerfile qalatest .
@@ -28,6 +30,8 @@ build-qa-container:
 
 build-staging-container:
   stage: build
+  before_script:
+    - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build -t --file .dockerfile latest .
