@@ -57,6 +57,7 @@ deploy-qa-container:
   stage: deploy
   environment: 
     name: qa
+    url: http://172.24.32.6:$TEST_EXTERNAL_PORT/
   before_script:
     - docker info
   script: 
@@ -73,6 +74,7 @@ deploy-staging-container:
   stage: deploy
   environment: 
     name: staging
+    url: http://172.24.32.6:$RELEASE_EXTERNAL_PORT/
   before_script:
     - docker info
   script: 
