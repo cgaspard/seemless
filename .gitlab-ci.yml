@@ -1,12 +1,18 @@
 stages:
   - test
   - build
+  - deploy
 
 variables:
-  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemless
-  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemless
+  TEST_IMAGE_CONTAINER: git.mygait.com:4567/cgaspard/seemless
   TEST_TAG: qalatest
+  TEST_EXTERNAL_PORT: 9001
+  TEST_INTERNAL_PORT: 9092
+  TEST_CONTAINER_NAME: seemless-qa
+  RELEASE_IMAGE_CONTAINER: git.mygait.com:4567/cgaspard/seemless
   RELEASE_TAG: latest
+  RELEASE_EXTERNAL_PORT: 9002
+  RELEASE_CONTAINER_NAME: seemeless-staging
 
 image: node:7.7.2
 
@@ -26,7 +32,7 @@ build-qa-container:
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build --file .dockerfile -t $TEST_TAG .
-    - docker push $CONTAINER_TEST_IMAGE:$TEST_TAG
+    - docker push $TEST_IMAGE_CONTAINER:$TEST_TAG
   only:
     - dev
 
@@ -37,6 +43,34 @@ build-staging-container:
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
     - docker build --file .dockerfile -t $RELEASE_TAG .
-    - docker push $CONTAINER_RELEASE_IMAGE:$RELEASE_TAG
+    - docker push $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG
   only: 
+    - master
+
+deploy-qa-container:
+  stage: deploy
+  environment: qa
+  before_script:
+    - docker info
+  script: 
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
+    - docker pull $TEST_IMAGE_CONTAINER:$TEST_TAG
+    - docker stop $TEST_CONTAINER_NAME
+    - docker rm $TEST_CONTAINER_NAME    
+    - docker run $TEST_IMAGE_CONTAINER:$TEST_TAG --name=$TEST_CONTAINER_NAME --restart=always -e HTTP_PORT=$TEST_INTERNAL_PORT -p $TEST_EXTERNAL_PORT:$TEST_INTERNAL_PORT
+  only:
+    - dev
+
+deploy-staging-container:
+  stage: deploy
+  environment: staging
+  before_script:
+    - docker info
+  script: 
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
+    - docker pull $RELEASE_IMAGE_CONTAINER:$TEST_TAG
+    - docker stop $RELEASE_CONTAINER_NAME
+    - docker rm $RELEASE_CONTAINER_NAME    
+    - docker run $RELEASE_IMAGE_CONTAINER:$RELEASE_TAG --name=$RELEASE_CONTAINER_NAME --restart=always -e HTTP_PORT=$RELEASE_INTERNAL_PORT -p $RELEASE_EXTERNAL_PORT:$RELEASE_INTERNAL_PORT
+  only:
     - master

@@ -1,6 +1,22 @@
 const http = require('http');
-const port = 8080;
 const staticPrefix = "/staticcontent";
+var port = 8080;
+
+/// check for the port env variable
+if(process.env !== undefined && process.env.HTTP_PORT !== undefined) {
+    port = process.env.HTTP_PORT;
+    console.log("Running on port ", port);
+}
+
+
+/// check for the port param
+for(var i = 0; i < process.argv.length; i++) {
+    var arg = process.argv[i];
+    if(arg.indexOf("--port:") === 0) {
+        port = arg.split(":")[1];
+        // console.log("Running on port ", port);
+    }
+}
 
 var seemless = require("../src/lib/seemless.js");
 seemless.debug = true;
