@@ -3,8 +3,8 @@ stages:
   - build
 
 variables:
-  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemeless:qalatest
-  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemeless:latest
+  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemless:qalatest
+  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemless:latest
 
 image: node:7.7.2
 
