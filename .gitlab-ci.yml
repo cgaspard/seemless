@@ -3,8 +3,10 @@ stages:
   - build
 
 variables:
-  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemless:qalatest
-  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemless:latest
+  CONTAINER_TEST_IMAGE: git.mygait.com:4567/cgaspard/seemless
+  CONTAINER_RELEASE_IMAGE: git.mygait.com:4567/cgaspard/seemless
+  TEST_TAG: qalatest
+  RELEASE_TAG: latest
 
 image: node:7.7.2
 
@@ -23,8 +25,8 @@ build-qa-container:
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
-    - docker build --file .dockerfile -t $CONTAINER_TEST_IMAGE .
-    - docker push $CONTAINER_TEST_IMAGE
+    - docker build --file .dockerfile -t $TEST_TAG .
+    - docker push $CONTAINER_TEST_IMAGE:$TEST_TAG
   only:
     - dev
 
@@ -34,7 +36,7 @@ build-staging-container:
     - docker info
   script: 
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567
-    - docker build --file .dockerfile -t $CONTAINER_RELEASE_IMAGE .
-    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker build --file .dockerfile -t $RELEASE_TAG .
+    - docker push $CONTAINER_RELEASE_IMAGE:$RELEASE_TAG
   only: 
     - master
