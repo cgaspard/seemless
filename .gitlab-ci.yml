@@ -23,7 +23,7 @@ unit_tests:
     - npm install --silent -g tape > /dev/null
     - npm install --silent -g faucet > /dev/null
   script:
-    - echo "You are here"
+    - echo You are here
     - tape tests/*.js | faucet
   tags:
     - nodejs-7.7.2	
