@@ -2,6 +2,7 @@ stages:
   - test
   - build
   - deploy
+  - integrationtests
 
 variables:
   CONTAINER_INTERNAL_PORT: "8080"
@@ -22,6 +23,7 @@ unit_tests:
     - npm install --silent -g tape > /dev/null
     - npm install --silent -g faucet > /dev/null
   script:
+    - echo "You are here"
     - tape tests/*.js | faucet
   tags:
     - nodejs-7.7.2	
@@ -63,7 +65,8 @@ deploy-qa-container:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.mygait.com:4567  
     - docker pull $TEST_IMAGE_CONTAINER:$TEST_TAG
     - docker stop $TEST_CONTAINER_NAME || true && docker rm $TEST_CONTAINER_NAME || true
-    - docker run --name=$TEST_CONTAINER_NAME --restart=always -p $TEST_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT  -d $TEST_IMAGE_CONTAINER:$TEST_TAG
+    - docker run --name=$TEST_CONTAINER_NAME --restart=always -p $TEST_EXTERNAL_PORT:$CONTAINER_INTERNAL_PORT  -d $TEST_IMAGE_CONTAINER:$TEST_TAG --link 
+    - docker 
   only:
     - dev
   tags:
@@ -74,7 +77,7 @@ deploy-staging-container:
   stage: deploy
   environment: 
     name: staging
-    url: http://172.24.32.6:$RELEASE_EXTERNAL_PORT/
+    url: http://172.24.32.6/J111/
   before_script:
     - docker info
   script: 
@@ -87,3 +90,17 @@ deploy-staging-container:
   tags:
     - shell
   when: manual
+
+integration_tests:
+  stage: integrationtests
+  image: node:7.7.2
+  before_script:
+    - npm update --silent > /dev/null
+    - npm install --silent -g newman > /dev/null
+  script:
+    - export TESTURL=http://172.24.32.6/J111/; newman /path/to/json/file.json
+  tags:
+    - nodejs-7.7.2
+  shoulderror: false
+  
+
