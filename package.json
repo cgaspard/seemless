@@ -21,11 +21,9 @@
   },
   "keywords": [
     "seemless",
-    "http",
-    "restful"
+    "http"
   ],
   "dependencies" : {
-    "restify"   :  "*",
     "mime" :  "*"
   },
   "analyze": false,
